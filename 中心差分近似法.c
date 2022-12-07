@@ -63,9 +63,9 @@ int main() {
 	// parameter h --> δt
 	double h = 0.1;
 	// count of simulate
-    // printf("%.10lf\n", k);
+        // printf("%.10lf\n", k);
 	double N = 100;
-    FILE *fp = fopen("res.csv", "w");
+        FILE *fp = fopen("res.csv", "w");
 	for (double i = 0; i <= N; i++) {
 		// printf("%.10lf %.10lf\n", s1, s2);
         double time = i*h;  
