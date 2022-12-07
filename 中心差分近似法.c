@@ -5,7 +5,7 @@
 
 double f(double x, double y);
 
-int main(void) {
+int main() {
 	//(1)state, read SBML file
 	// get species names, initial amount, kineticlaw formula
 	puts("(1)state");
@@ -66,15 +66,15 @@ int main(void) {
 	// count of simulate
   // printf("%.10lf\n", k);
 	double N = 100;
-  FILE *fp = fopen("res.csv", "w");
+    FILE *fp = fopen("res.csv", "w");
 	for (double i = 0; i <= N; i++) {
 		// printf("%.10lf %.10lf\n", s1, s2);
-    double time = i*h;  
-    fprintf(fp, "%.10lf,%.10lf,%.10lf\n", time, s1, s2);
-    //中心差分近似法
-    double dif = h*f(k,s1-0.5*h*f(k,s1));
-    s1 -= dif;
-    s2 += dif;
+        double time = i*h;  
+        fprintf(fp, "%.10lf,%.10lf,%.10lf\n", time, s1, s2);
+        //中心差分近似法
+        double dif = h*f(k,s1-0.5*h*f(k,s1));
+        s1 -= dif;
+        s2 += dif;
 	}
 	SBMLDocument_free(d);
 	return 0;
