@@ -1,4 +1,3 @@
-
 #include "sbml/SBMLTypes.h"
 #include <stdio.h>
 #define uint unsigned int
