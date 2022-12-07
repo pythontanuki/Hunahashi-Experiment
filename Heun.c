@@ -66,15 +66,15 @@ int main(void) {
 	// count of simulate
   // printf("%.10lf\n", k);
 	double N = 100;
-  FILE *fp = fopen("res.csv", "w");
+    FILE *fp = fopen("res.csv", "w");
 	for (double i = 0; i <= N; i++) {
 		// printf("%.10lf %.10lf\n", s1, s2);
-    double time = i*h;  
-    fprintf(fp, "%.10lf,%.10lf,%.10lf\n", time, s1, s2);
-    //ホイン法
-    double dif = (h/2)*(f(k,s1)+f(k,s1-h*f(k,s1)));
-    s1 -= dif;
-    s2 += dif;
+        double time = i*h;  
+        fprintf(fp, "%.10lf,%.10lf,%.10lf\n", time, s1, s2);
+        //ホイン法
+        double dif = (h/2)*(f(k,s1)+f(k,s1-h*f(k,s1)));
+        s1 -= dif;
+        s2 += dif;
 	}
 	SBMLDocument_free(d);
 	return 0;

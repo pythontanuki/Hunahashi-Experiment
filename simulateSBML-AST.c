@@ -126,11 +126,11 @@ int main() {
 		Initial_Amount[i] = Species_getInitialAmount(Sp[i]);
 		Ids[i] = Species_getId(Sp[i]);
 	}
-  rep(i,Splist_size) {
-    Ndbg(Initial_Amount[i]);
-    Sdbg(Species_getName(Sp[i]));
-    Sdbg(Ids[i]);
-  }
+    rep(i,Splist_size) {
+        Ndbg(Initial_Amount[i]);
+        Sdbg(Species_getName(Sp[i]));
+        Sdbg(Ids[i]);
+    }
 	// prepare for operating information with AST_Node type
 	rep(i, Reac_size) {
 		Reac[i] = (Reaction_t *)ListOf_get(Reac_list, i);

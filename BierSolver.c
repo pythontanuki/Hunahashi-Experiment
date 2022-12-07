@@ -47,32 +47,17 @@ bool compareId(const char *s1, const char *s2) {
 
 double applyParameterAndVariables(const ASTNode_t *v,KineticLaw_t *kl,int Splist_size, Model_t* m) {
 	double res = 0;
-	// variables or parameters
-	// if (ASTNode_isName(v)) {
 	const char *id = ASTNode_getName(v);
 	bool find_Id = false;
 	rep(i, Splist_size) if (compareId(id, Species_getId(Sp[i]))) {
-    // printf("%s\n", id);
 		find_Id = true, res = Initial_Amount[i];
-    // printf("%s, %lf\n", id, res);
-    // puts("101909r89");
 		break;
 	}
 	if (!find_Id) {
-    //ここがうまくいっていない
-		// Parameter_t *p = KineticLaw_getParameterById(kl, id);
-    ListOf_t* lop = Model_getListOfParameters(m);
-    // printf("%s\n",KineticLaw_getFormula(kl));
-    // rep(i,lopsi) {
-    //   Parameter_t* p = KineticLaw_getParameter(kl, i);
-    //   printf("%s, %lf\n", Parameter_getId(p), Parameter_getValue(p));
-    // }
-    Parameter_t *p = ListOfParameters_getById(lop,id);
+        ListOf_t* lop = Model_getListOfParameters(m);
+        Parameter_t *p = ListOfParameters_getById(lop,id);
 		res = Parameter_getValue(p);
 	}
-	// } else
-	// 	res = (ASTNode_isInteger(v) ? ASTNode_getInteger(v) :
-	// ASTNode_getReal(v));
 	return res;
 }
 
@@ -110,8 +95,6 @@ ASTNode_t* makeBinarySubtree(const ASTNode_t *v) {
 
 double dfsOnASTBinaryTree(const ASTNode_t *v, KineticLaw_t *kl, int Splist_size,Model_t* m) {
 	double left_val = 0, right_val = 0;
-	// bool left_isNot_operator = false, right_isNot_operator = false;
-	// If we get to the leaf, we should end this function.
 	ASTNodeType_t op = ASTNode_getType(v);
 	if (ASTNode_getNumChildren(v) == 0) { // leaf
 		if (op == AST_INTEGER)
@@ -123,12 +106,6 @@ double dfsOnASTBinaryTree(const ASTNode_t *v, KineticLaw_t *kl, int Splist_size,
 	}
 	ASTNode_t *left = ASTNode_getLeftChild(v);
 	ASTNode_t *right = ASTNode_getRightChild(v);
-	// ASTNodeType_t left_type = ASTNode_getType(left);
-	// ASTNodeType_t right_type = ASTNode_getType(right);
-	// checkType(left_type) ? (left_isNot_operator = true) : (left_val =
-	// dfs(left, kl, Splist_size)); checkType(right_type) ?
-	// (right_isNot_operator = true) : (right_val = dfs(right, kl,
-	// Splist_size));
   if((ASTNode_getNumChildren(left) > 2) && (ASTNode_getNumChildren(right) > 2)) {
     left_val = dfsOnASTBinaryTree(makeBinarySubtree(left),kl,Splist_size,m);
     right_val = dfsOnASTBinaryTree(makeBinarySubtree(right),kl,Splist_size,m);
@@ -144,44 +121,25 @@ double dfsOnASTBinaryTree(const ASTNode_t *v, KineticLaw_t *kl, int Splist_size,
     dfsOnASTBinaryTree(left, kl, Splist_size,m);
     return solve(op,left_val,right_val);
 	}
-	// In this state, We should confirm types and determine l's and r's
-	// parameter. This will be acheived by 2 steps, Numbers State/Otherwise.
-	// We do left part here, but right will be done as well.
-	// if (left_isNot_operator)
-	// 	left_val = applyParameterAndVariables(left, kl, Splist_size);
-	// if (right_isNot_operator)
-	// 	right_val = applyParameterAndVariables(right, kl, Splist_size);
   left_val = dfsOnASTBinaryTree(left, kl, Splist_size,m);
 	right_val = dfsOnASTBinaryTree(right, kl, Splist_size,m);
-  // if(op == AST_PLUS)puts("+");
-  // if(op == AST_MINUS)puts("-");
-  // if(op == AST_TIMES)puts("*");
-  // if(op == AST_DIVIDE)puts("/");
 	return solve(op, left_val, right_val);
 }
 
 int main() {
 	SBMLDocument_t *d;
 	d = readSBML("Bier2000_s.xml");
-	// d = readSBML("mapk.xml");
 	Model_t *m = SBMLDocument_getModel(d);
 	ListOf_t *Sp_list = Model_getListOfSpecies(m);
 	ListOf_t *Reac_list = Model_getListOfReactions(m);
 
 	uint Splist_size = ListOf_size(Sp_list), Reac_size = ListOf_size(Reac_list);
 
-	// get each sp's information and puts them
 	rep(i, Splist_size) {
 		Sp[i] = (Species_t *)ListOf_get(Sp_list, i);
 		Initial_Amount[i] = Species_getInitialAmount(Sp[i]);
 		Ids[i] = Species_getId(Sp[i]);
 	}
-	// rep(i, Splist_size) {
-		// Ndbg(Initial_Amount[i]);
-		// Sdbg(Species_getName(Sp[i]));
-		// Sdbg(Ids[i]);
-	// }
-	// prepare for operating information with AST_Node type
 	rep(i, Reac_size) {
 		Reac[i] = (Reaction_t *)ListOf_get(Reac_list, i);
 		React_List[i] = Reaction_getListOfReactants(Reac[i]);
@@ -191,7 +149,6 @@ int main() {
 		KineticLaw[i] = Reaction_getKineticLaw(Reac[i]);
 		AST_NumericalFormula[i] = KineticLaw_getMath(KineticLaw[i]);
 	}
-  // rep(i,Reac_size) Sdbg(ASTNode_getName(AST_NumericalFormula[i]));
 	double t = 0, t_max = 4000, dt = 1.0;
 	double results[Splist_size][M];
 	int cnt = 0;
@@ -200,7 +157,6 @@ int main() {
 	while (t <= t_max) {
 		rep(i, Reac_size) {
 			ReacVals[i] = dfsOnASTBinaryTree(AST_NumericalFormula[i], KineticLaw[i], Splist_size, m);
-			// Ndbg(ReacVals[i]);
 		}
 		t += dt;
 		cnt++;
