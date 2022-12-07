@@ -64,7 +64,7 @@ int main(void) {
 	double s1 = SpeciesInitialAmountVector[0];
 	// s2
 	double s2 = SpeciesInitialAmountVector[1];
-    s2 = 0.0;
+        s2 = 0.0;
 	// parameter k
 	// parameter h --> δt
 	double h = 0.1;
