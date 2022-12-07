@@ -1,4 +1,3 @@
-
 #include "sbml/SBMLTypes.h"
 #include <stdbool.h>
 #include <stdio.h>
